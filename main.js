@@ -1,12 +1,11 @@
+//====== variables ==========
 let rightLetters = document.querySelectorAll(".mainTryCon input");
-let try1Letters = document.querySelectorAll(".tryCon1 input");
-let try2Letters = document.querySelectorAll(".tryCon2 input");
-let try3Letters = document.querySelectorAll(".tryCon3 input");
-let try4Letters = document.querySelectorAll(".tryCon4 input");
-let try5Letters = document.querySelectorAll(".tryCon5 input");
 let Letters = document.querySelectorAll("input");
 let con = document.querySelectorAll(".try");
-let button = document.querySelector("button");
+let checkBtn = document.querySelector("#check");
+let hintBtn = document.querySelector("#hint");
+let infoSec = document.querySelector("#info");
+let triesNum = 0;
 //====== generate words function ==========
 function generateWords() {
     const wordsSet = ["apple", "water", "house", "smile", "light"];
@@ -23,46 +22,78 @@ function splitWord() {
 //====== check words function ==========
 function check(l, i) {
     if (l.value == word[i]) {
-        l.style.borderColor = "green";
-        l.style.backgroundColor = "green";
+        l.style.borderColor = "rgb(41, 146, 13)";
+        l.style.backgroundColor = "rgb(41, 146, 13)";
         l.style.color = "white";
+        l.dataset.status = "correct";
     } else if (word.includes(l.value)) {
-        l.style.borderColor = "rgb(139, 83, 11)";
-        l.style.backgroundColor = "rgb(139, 83, 11)";
+        l.style.borderColor = "rgb(235, 129, 30)";
+        l.style.backgroundColor = "rgb(235, 129, 30)";
         l.style.color = "white";
+        l.dataset.status = "wrong";
     } else {
-        l.style.borderColor = "red";
-        l.style.backgroundColor = "red";
+        l.style.borderColor = "rgb(237, 81, 61)";
+        l.style.backgroundColor = "rgb(237, 81, 61)";
         l.style.color = "white";
+        l.dataset.status = "wrong";
+
     }
 };
-//====== run ==========
-splitWord();
-let i = 0;
-let inputs = con[i].querySelectorAll("input");
-
-button.addEventListener("click", e => {
-    e.preventDefault();
-    inputs.forEach(check);
-    inputs.forEach(l => {
-        if (l.value != "") {
-            l.disabled = true;
-        }
-    });
-    i++;
-    if (i >= con.length) return;
-
-});
 //====== auto move ==========
-inputs.forEach((input, index) => {
+for (let i = 1; i < con.length; i++) {
+    con[i].querySelectorAll("input").forEach(l => {
+        l.disabled = true;
+        l.style.backgroundColor = "rgb(196, 198, 200)";
+    });
+};
+Letters.forEach((input, i) => {
     input.addEventListener("input", () => {
-        if (input.value.length === 1 && index < inputs.length - 1) {
-            inputs[index + 1].focus();
+        if (input.value.length === 1 && i < Letters.length - 1) {
+            Letters[i + 1].focus();
         }
     });
     input.addEventListener("keydown", (e) => {
-        if (e.key === "Backspace" && input.value === "" && index > 0) {
-            inputs[index - 1].focus();
+        if (e.key === "Backspace" && input.value === "" && i > 0) {
+            Letters[i - 1].focus();
         }
     });
+});
+//====== run ==========
+splitWord();
+checkBtn.addEventListener("click", e => {
+    e.preventDefault();
+    let inputs = con[triesNum].querySelectorAll("input");
+    inputs.forEach(check);
+    inputs.forEach(l => {
+        l.disabled = true;
+    });
+    let result=[...inputs].every(l => l.dataset.status === "correct")
+    ;
+   if (!result) {
+     if (triesNum < con.length - 1) {
+        triesNum++;
+    };
+    con[triesNum].querySelectorAll("input").forEach(l => {
+        l.disabled = false;
+        l.style.backgroundColor = "white";
+    });
+   };
+   
+});
+let hintCounter=0;
+hintBtn.addEventListener("click", e => {
+    e.preventDefault();
+    let p = document.createElement("p");
+    if (hintCounter<2) {
+        p.innerHTML = `The word includes <span>"${word[Math.floor(Math.random() *4)]}"</span> letter`;
+        p.style.fontSize = "larger";
+        p.style.margin = "15px auto";
+        p.style.textAlign = "center";
+        p.style.border = "1px solid brown";
+        p.style.borderRadius = "5px";
+        p.style.padding = "10px";
+        p.style.width = "70%";    
+        infoSec.appendChild(p);
+        hintCounter++;  
+    };
 });
