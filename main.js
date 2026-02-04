@@ -13,12 +13,6 @@ function generateWords() {
     return word;
 };
 const word = [...generateWords()];
-function splitWord() {
-    rightLetters.forEach((l, i) => {
-        l.value = word[i];
-    });
-    console.log(word);
-};
 //====== check words function ==========
 function check(l, i) {
     if (l.value == word[i]) {
@@ -59,7 +53,6 @@ Letters.forEach((input, i) => {
     });
 });
 //====== run ==========
-splitWord();
 checkBtn.addEventListener("click", e => {
     e.preventDefault();
     let inputs = con[triesNum].querySelectorAll("input");
