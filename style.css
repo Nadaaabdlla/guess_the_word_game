@@ -130,3 +130,8 @@ margin: 10px;
     font-weight: 900;
     font-size: larger;
 }
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+  }
+}
