@@ -134,4 +134,7 @@ margin: 10px;
   body {
     flex-direction: column;
   }
+  #gameCon,#info{
+   width: 90%; 
+  }
 }
